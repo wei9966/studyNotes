@@ -202,7 +202,7 @@
 
 ##### Hystrix案例
 
-1. 新建module
+1. 新建module cloud-provider-hystrix-payment8001
 
 2. 编写pom.xml文件
 
@@ -242,6 +242,42 @@
 4. 编写主启动类
 
    ```java
+   package com.wb.springcloud;
+   
+   import com.netflix.hystrix.HystrixMetrics;
+   import com.netflix.hystrix.contrib.metrics.eventstream.HystrixMetricsStreamServlet;
+   import org.springframework.boot.SpringApplication;
+   import org.springframework.boot.autoconfigure.SpringBootApplication;
+   import org.springframework.boot.web.servlet.ServletRegistrationBean;
+   import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
+   import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+   import org.springframework.context.annotation.Bean;
+   
+   import javax.servlet.ServletRegistration;
+   
+   /**
+    * Create By WeiBin on 2020/3/18 11:54
+    */
+   @SpringBootApplication
+   @EnableDiscoveryClient
+   @EnableCircuitBreaker
+   public class HystrixPayment8001 {
+   
+       public static void main(String[] args) {
+           SpringApplication.run(HystrixPayment8001.class,args);
+       }
+       
+   //这个是必须写的
+       @Bean
+       public ServletRegistrationBean getServlet(){
+           HystrixMetricsStreamServlet streamServlet=new HystrixMetricsStreamServlet();
+           ServletRegistrationBean registrationBean=new ServletRegistrationBean(streamServlet);
+           registrationBean.setLoadOnStartup(1);
+           registrationBean.addUrlMappings("/hystrix.stream");
+           registrationBean.setName("HystrixMetricsStreamServlet");
+           return registrationBean;
+       }
+   }
    
    ```
 
@@ -266,9 +302,53 @@
    2. 控制层
 
       ```java
+      package com.wb.springcloud.controller;
+      
+import com.wb.springcloud.service.HystrixService;
+      import lombok.extern.slf4j.Slf4j;
+      import org.springframework.beans.factory.annotation.Value;
+      import org.springframework.web.bind.annotation.GetMapping;
+      import org.springframework.web.bind.annotation.PathVariable;
+      import org.springframework.web.bind.annotation.RestController;
+      
+      import javax.annotation.Resource;
+      import java.util.concurrent.TimeUnit;
+      
+      /**
+       * Create By WeiBin on 2020/3/18 12:00
+       */
+      @RestController
+      @Slf4j
+      public class HystrixController {
+      
+          @Value("${server.port}")
+          private String serverPort;
+          @Resource
+          private HystrixService hystrixService;
+      
+          @GetMapping("/payment/hystrix/ok/{id}")
+          public String hystrix_ok(@PathVariable("id") Integer id){
+              String result=hystrixService.hystrix_ok(id);
+              log.info("结果是*****"+result);
+              return result;
+          }
+          @GetMapping("/payment/hystrix/timeout/{id}")
+          public String hystrix_timeout(@PathVariable("id") Integer id){
+              String result=hystrixService.hystrix_timeout(id);
+              log.info("结果是*****"+result);
+              return result;
+          }
+          @GetMapping("/payment/circuit/{id}")
+          public String paymentCircuitBreaker(@PathVariable("id") Integer id) {
+              String result=hystrixService.paymentCircuitBreaker(id);
+              log.info("*****result"+result);
+              return result;
+          }
+      
+      }
       
       ```
-
+      
       
 
 ##### 出现服务卡顿

@@ -87,7 +87,7 @@ Collection col=new ArrayList()是正确的
 
    2. 迭代器遍历
 
-   3. ![](D:\360MoveData\Users\WB\Desktop\MarkDownPadNote\Spring\pic\14.png)
+   3. ![](pic\14.png)
 
 ### 装配基本Bean
 
@@ -110,11 +110,11 @@ Collection col=new ArrayList()是正确的
 #### 示例
 
 1. 创建student和gradate,前者继承后者,后者有属性学位degree
-   1. <img src="D:\360MoveData\Users\WB\Desktop\MarkDownPadNote\Spring\pic\15.png" style="zoom:100%;" />
+   1. <img src="pic\15.png" style="zoom:100%;" />
 2. xml配置bean
-   1. ![](D:\360MoveData\Users\WB\Desktop\MarkDownPadNote\Spring\pic\16.png)
+   1. ![](pic\16.png)
 3. 编写测试文件测试
-   1. <img src="D:\360MoveData\Users\WB\Desktop\MarkDownPadNote\Spring\pic\17.png" style="zoom:100%;" />
+   1. <img src="pic\17.png" style="zoom:100%;" />
 4. 问题:
    1. 如果自己配置属性name,age则会替换从父对象继承的数据
 
@@ -140,7 +140,7 @@ Collection col=new ArrayList()是正确的
       System.out.println(properties.get("键名").toString())
       ```
 
-   2. ![](D:\360MoveData\Users\WB\Desktop\MarkDownPadNote\Spring\pic\18.png)
+   2. ![](pic\18.png)
 
 ### 如果用构造函数注入
 
@@ -201,7 +201,7 @@ Collection col=new ArrayList()是正确的
 
 4. 自动装配细节
 
-   1. ![](D:\360MoveData\Users\WB\Desktop\MarkDownPadNote\Spring\pic\19.png)
+   1. ![](pic\19.png)
    2. 
 
 
@@ -211,7 +211,7 @@ Collection col=new ArrayList()是正确的
 
 #### 使用spring的特殊bean
 
-1. ![](D:\360MoveData\Users\WB\Desktop\MarkDownPadNote\Spring\pic\20.png)
+1. ![](pic\20.png)
 
 2. 实现了接口的后置器处理Bean
 
@@ -232,21 +232,24 @@ Collection col=new ArrayList()是正确的
          </bean>
          ```
 
-      2. ![](D:\360MoveData\Users\WB\Desktop\MarkDownPadNote\Spring\pic\22.png)
-
-   4. 用属性文件来注入值,分散配置
-
-      1. ![](D:\360MoveData\Users\WB\Desktop\MarkDownPadNote\Spring\pic\21.png)
-
-      2. 配置spring的特殊的bean
-
+         ![](pic/22.png)
+      
+   
+4. 用属性文件来注入值,分散配置
+   
+   1. ![](pic\21.png)
+   
+   2. 配置spring的特殊的bean
+   
          1. ```
             context:property-placeholder location="classpath:你的属性文件路径"
             ```
-
-         2. 引入了我们的db.properties文件
-
+   ```
+      
+   2. 引入了我们的db.properties文件
+      
          3. 多个要用逗号分隔
+      ```
 
 
 
@@ -267,7 +270,7 @@ Collection col=new ArrayList()是正确的
    4. java语言(面向对象-->类,对象) 属性：变量；行为-->函数
    5. 面向切面 spring(-->aop) 
       1. 初步原理图
-      2. ![](D:\360MoveData\Users\WB\Desktop\MarkDownPadNote\Spring\pic\23.png)
+      2. ![](pic\23.png)
 
 #### AOP特别提醒
 
@@ -398,7 +401,7 @@ Collection col=new ArrayList()是正确的
 
 ##### 一些概念
 
-1. 切面: before函数里面要做的事情
+1. 切面: before函数里面要做的事情，就是要处理的事务，或者日志之类的
 2. 通知:事务通知的类
 3. 连接点:即连接方法的一个点,一个连接点总是表示一个方法的执行
 4. 织入:将通知织入到代理对象中,即应用到对象上，可以在任意时候被织入

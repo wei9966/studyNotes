@@ -134,7 +134,7 @@ api![](pic/38.png)
 
 6. 可以看到rabbitmq的图形有变化
 
-#### 消息驱动之消费者
+#### 消息驱动之消费者 cloud-stream-rabbitmq-consumer8803
 
 1. pom
 
@@ -339,3 +339,165 @@ localhost:9411/zipkin/
 #### 简介
 
 https://spring.io/projects/spring-cloud-alibaba#overview官网
+
+api地址 github.com/alibaba/spring-cloud.alibaba
+
+#### Nacos
+
+安装地址 github 打开bin目录下的 statup 验证地址localhost:8848/nacos
+
+#### Nacos之服务提供者注册
+
+##### 步骤
+
+1. 创建cloudalibaba-provider-payment9001
+
+2. pom 
+
+   ```xml
+   <dependency>
+        <groupId>com.alibaba.cloud</groupId>
+        <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+    </dependency>
+    <dependency>
+               <groupId>com.wb.springcloud</groupId>
+               <artifactId>cloud-api-commons</artifactId>
+               <version>1.0-SNAPSHOT</version>
+           </dependency>
+           <dependency>
+               <groupId>org.springframework.boot</groupId>
+               <artifactId>spring-boot-starter-web</artifactId>
+           </dependency>
+           <dependency>
+               <groupId>org.springframework.cloud</groupId>
+               <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+           </dependency>
+   
+           <dependency>
+               <groupId>org.springframework.boot</groupId>
+               <artifactId>spring-boot-devtools</artifactId>
+               <scope>runtime</scope>
+               <optional>true</optional>
+           </dependency>
+   ```
+
+3. yml
+
+   ```properties
+   server:
+     port: 9001
+   spring:
+     application:
+       name: cloud-nacos-payment
+     cloud:
+       nacos:
+         discovery:
+           server-addr: localhost:8848
+   management:
+     endpoints:
+       web:
+         exposure:
+           include: "*"
+   
+   ```
+
+4. 主启动
+
+   ```java
+   package com.wb.springcloud;
+   
+   import org.springframework.boot.SpringApplication;
+   import org.springframework.boot.autoconfigure.SpringBootApplication;
+   import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+   
+   /**
+    * Create By WeiBin on 2020/3/20 15:55
+    */
+   @SpringBootApplication
+   @EnableDiscoveryClient
+   public class NacosMain9001 {
+   
+       public static void main(String[] args) {
+           SpringApplication.run(NacosMain9001.class,args);
+       }
+   
+   }
+   
+   ```
+
+   
+
+5. 业务类
+
+   ```java
+   package com.wb.springcloud.controller;
+   
+   import cn.hutool.Hutool;
+   import cn.hutool.core.util.RandomUtil;
+   import cn.hutool.core.util.RuntimeUtil;
+   import org.apache.commons.lang3.RandomUtils;
+   import org.springframework.beans.factory.annotation.Value;
+   import org.springframework.web.bind.annotation.GetMapping;
+   import org.springframework.web.bind.annotation.PathVariable;
+   import org.springframework.web.bind.annotation.RestController;
+   
+   import java.util.concurrent.TimeUnit;
+   
+   /**
+    * Create By WeiBin on 2020/3/20 15:56
+    */
+   @RestController
+   public class NacosProviderController {
+   
+       @Value("${server.port}")
+       private String serverport;
+   
+       @GetMapping("/payment/getEcho/{string}")
+       public String echo(@PathVariable("string") String string){
+   
+           return string+"hello nacos discover"+RandomUtil.randomUUID().toString()+"\t"+serverport;
+       }
+   }
+   
+   ```
+
+   
+
+#### Nacos之服务消费者注册+负载均衡
+
+#### Nacos配置中心
+
+##### 初级
+
+1. 建项目
+2. pom
+3. yml
+4. 启动
+5. 业务
+
+##### 中级-为了解决多个环境多个版本
+
+**dev,test,prod三个环境用三个nameSpace**
+
+**group把不同的微服务划分到同一个分组**
+
+**service就是微服务**
+
+**instance就是具体微服务实例**
+
+##### 通过获取application.yml下的active来获取不同版本的config
+
+##### 通过设置分组来获取不同分组的不同config，在配置文件的file-extension 下面加上group
+
+##### 通过namespace来获取
+
+### Nacos集群和持久化配置(重点)
+
+#### 持久化配置就是把Nacos自带的数据库换成mysql数据库,过程在官网有
+
+#### 配置Nacos集群
+
+
+
+
+

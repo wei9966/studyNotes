@@ -597,16 +597,152 @@ java8+maven+git、github+Nginx+RabbitMq+SpringBoot2.0
 ##### 步骤
 
 1. 键module
+
 2. 改pom
+
+   ```xml
+   <dependencies>
+           <dependency>
+               <groupId>com.wb.springcloud</groupId>
+               <artifactId>cloud-api-commons</artifactId>
+               <version>${project.version}</version>
+           </dependency>
+           <dependency>
+               <groupId>org.springframework.boot</groupId>
+               <artifactId>spring-boot-starter-web</artifactId>
+           </dependency>
+           <dependency>
+               <groupId>org.springframework.cloud</groupId>
+               <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+           </dependency>
+   
+           <dependency>
+               <groupId>org.springframework.boot</groupId>
+               <artifactId>spring-boot-devtools</artifactId>
+               <scope>runtime</scope>
+               <optional>true</optional>
+           </dependency>
+           <dependency>
+               <groupId>org.projectlombok</groupId>
+               <artifactId>lombok</artifactId>
+               <optional>true</optional>
+           </dependency>
+           <dependency>
+               <groupId>org.springframework.boot</groupId>
+               <artifactId>spring-boot-starter-test</artifactId>
+               <scope>test</scope>
+               <exclusions>
+                   <exclusion>
+                       <groupId>org.junit.vintage</groupId>
+                       <artifactId>junit-vintage-engine</artifactId>
+                   </exclusion>
+               </exclusions>
+           </dependency>
+       </dependencies>
+   ```
+
+   
+
 3. 写yml
+
+   ```yaml
+   #端口号
+   server:
+     port: 80
+   
+   eureka:
+     client:
+       register-with-eureka: true #是否将自己注册进注册中心
+       fetch-registry: true
+       serviceUrl:
+           defaultZone: http://eureka7001.com:7001/eureka/,http://eureka7002.com:7002/eureka/ #注册中心地址，这里是eureka集群开发面模式
+   
+   spring:
+     application:
+       name: cloud-consumer-order #项目名称
+   
+   ```
+
+   
+
 4. 主启动
+
+   ```java
+   package cloud.cloudconsumerorder80;
+   
+   import org.springframework.boot.SpringApplication;
+   import org.springframework.boot.autoconfigure.SpringBootApplication;
+   import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+   import org.springframework.cloud.client.loadbalancer.LoadBalanced;
+   import org.springframework.context.annotation.Bean;
+   import org.springframework.web.client.RestTemplate;
+   
+   @SpringBootApplication
+   @EnableDiscoveryClient
+   public class CloudConsumerOrder80Application {
+   
+       public static void main(String[] args) {
+           SpringApplication.run(CloudConsumerOrder80Application.class, args);
+       }
+   
+       @Bean
+       @LoadBalanced
+       public RestTemplate getRestTemplate(){
+           return new RestTemplate();
+       }
+   }
+   
+   ```
+
+   
+
 5. 业务类
+
+   ```java
+   package cloud.cloudconsumerorder80.controller;
+   
+   import com.wb.springcloud.pojo.CommentResult;
+   import com.wb.springcloud.pojo.Payment;
+   import lombok.extern.slf4j.Slf4j;
+   import org.springframework.beans.factory.annotation.Autowired;
+   import org.springframework.web.bind.annotation.GetMapping;
+   import org.springframework.web.bind.annotation.PathVariable;
+   import org.springframework.web.bind.annotation.RestController;
+   import org.springframework.web.client.RestTemplate;
+   
+   /**
+    * Create By WeiBin on 2020/3/17 15:32
+    */
+   @RestController
+   @Slf4j
+   public class OrderController {
+   //    private static String PAYMENT_URL="http://localhost:8002";
+       private static String PAYMENT_URL="http://CLOUD-PAYMENT-SERVICE";
+   
+       @Autowired
+       private RestTemplate restTemplate;
+   
+       //调用新增方法
+   
+       @GetMapping("/consumer/payment/create")
+       public CommentResult<Payment> create(Payment payment){
+       return    restTemplate.postForObject(PAYMENT_URL+"/payment/create",payment,CommentResult.class);
+       }
+       @GetMapping("/consumer/payment/get/{id}")
+       public CommentResult<Payment> getPaymentById(@PathVariable("id") Long id){
+           return restTemplate.getForObject(PAYMENT_URL+"/payment/get/"+id,CommentResult.class);
+       }
+   }
+   
+   ```
+
+   
 
 ##### 代码
 
 #### 项目重构
 
-##### 就是将公共用的部分例如pojo的实体类提出来,然后新建maven项目,将文件包名+类名的方式拷贝过去,即可，其他项目引用此项目的坐标即可
+##### 就是将公共用的部分例如pojo的实	体类提出来,然后新建maven项目,将文件包名+类名的方式拷贝过去,即可，其他项目引用此项目的坐标即可
 
 #### Eureka基础知识
 
@@ -807,5 +943,5 @@ eureka:
 
 #### 负载均衡算法
 
-#### 
+
 
