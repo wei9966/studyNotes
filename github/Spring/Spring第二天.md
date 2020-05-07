@@ -249,7 +249,7 @@ Collection col=new ArrayList()是正确的
    2. 引入了我们的db.properties文件
       
          3. 多个要用逗号分隔
-      ```
+   ```
 
 
 
@@ -489,4 +489,19 @@ Collection col=new ArrayList()是正确的
    </bean>
    ```
 
+
+### 使用<aop:advisor>实现aop
+
+1. 创建日志类，实现相对应的处理器（通知）类
+
+   | 处理器               | 功能       |
+   | -------------------- | ---------- |
+   | AfterReturningAdvice | 后置处理器 |
+   | MethodBeforeAdvice   | 前置处理器 |
+   | ThrowsAdvice         | 异常通知   |
+   | MethodInterceptor    | 环绕通知   |
+   |                      |            |
+
    
+
+2. 

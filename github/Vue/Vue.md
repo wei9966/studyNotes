@@ -62,3 +62,26 @@
 
 #### main.js 入口文件
 
+#### 全局配置axios
+
+```js
+axios.defaults.baseURL='';//配置前置路径
+axios.defaults.headers.common['Authorization']='token'
+axios.defaults.headers.post['Content-type']='application/json'
+axios.defaults.headers.get['Accepts']='application/json'
+
+
+```
+
+#### 全局配置文件axios
+
+```js
+import axios from 'axios'
+const instance=axios.create({
+    baseURL:''
+}
+)
+instance.defaults.hreaders.common
+export default instance//导出
+```
+
